@@ -6,7 +6,7 @@
 
     <groupId>com.epam.jira</groupId>
     <artifactId>adapter-java-core</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
 
     <properties>
         <jdk.version>1.8</jdk.version>
