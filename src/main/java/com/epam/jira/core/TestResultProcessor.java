@@ -7,7 +7,8 @@ public class TestResultProcessor {
     private static Issue issue;
     private static Issues issues = new Issues();
 
-    private TestResultProcessor() {}
+    private TestResultProcessor() {
+    }
 
     public static void startJiraAnnotatedTest(String jiraKey) {
         addIssue();
@@ -21,8 +22,9 @@ public class TestResultProcessor {
 
     public static void addException(Throwable throwable) {
         String filePath = FileUtils.saveException(throwable);
+
         String exceptionMessage = throwable.getMessage();
-        if (exceptionMessage.contains("\n")) {
+        if (exceptionMessage != null && exceptionMessage.contains("\n")) {
             exceptionMessage = exceptionMessage.substring(0, exceptionMessage.indexOf('\n'));
         }
         String message = "Failed due to: " + throwable.getClass().getName() + ": " + exceptionMessage
@@ -51,7 +53,7 @@ public class TestResultProcessor {
 
     public static void saveResults() {
         addIssue();
-        FileUtils.writeXml(issues,"jira-tm-report.xml" );
+        FileUtils.writeXml(issues, "jira-tm-report.xml");
     }
 
     private static void addIssue() {

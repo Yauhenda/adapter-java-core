@@ -24,11 +24,11 @@ class Issue {
 
     @XmlElementWrapper(name = "attachments")
     @XmlElement(name = "attachment")
-    private List<String> attachments;
+    private List<String> attachments = new ArrayList<>();
 
     @XmlElementWrapper(name = "parameters")
     @XmlElement(name = "parameter")
-    private List<Parameter> parameters;
+    private List<Parameter> parameters = new ArrayList<>();
 
     void setIssueKey(String issueKey) {
         this.issueKey = StringEscapeUtils.escapeJson(issueKey);
@@ -53,7 +53,7 @@ class Issue {
         if (attachments == null) {
             this.attachments = new ArrayList<>();
         }
-        this.attachments.add(StringEscapeUtils.escapeJson(attachment));
+        this.attachments.add(StringEscapeUtils.escapeJson("." + attachment));
     }
 
     void setTime(String time) {

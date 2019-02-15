@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "tests")
@@ -11,7 +12,7 @@ import java.util.List;
 class Issues {
 
     @XmlElement(name = "test")
-    private List<Issue> issueList;
+    private List<Issue> issueList = new ArrayList<>();
 
     void addIssue(Issue issue) {
         this.issueList.add(issue);

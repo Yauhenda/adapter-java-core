@@ -22,17 +22,24 @@ class FileUtils {
     static String saveException(Throwable throwable) {
 
         String filePath = String.format("stacktrace_%s.txt", LocalDateTime.now().toString().replace(":", "-"));
-        FileUtils.writeStackTrace(throwable, filePath);
-        return filePath;
+        return writeStackTrace(throwable, filePath);
     }
 
-    private static void writeStackTrace(Throwable throwable, String filePath) {
+    private static String writeStackTrace(Throwable throwable, String filePath) {
+        String message = "";
 
-        try (BufferedWriter out = new BufferedWriter(new FileWriter(filePath))) {
+        try {
+            File file = File.createTempFile("stack", "tmp");
+            BufferedWriter out;
+            try (FileWriter fileWriter = new FileWriter(file)) {
+                out = new BufferedWriter(fileWriter);
+            }
             out.write(ExceptionUtils.getStackTrace(throwable));
+            message = saveFile(file, filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return message;
     }
 
     static String saveFile(File file) {
