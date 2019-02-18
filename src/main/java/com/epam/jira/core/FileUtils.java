@@ -5,11 +5,14 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 class FileUtils {
 
@@ -29,13 +32,12 @@ class FileUtils {
         String message = "";
 
         try {
-            File file = File.createTempFile("stack", "tmp");
-            BufferedWriter out;
-            try (FileWriter fileWriter = new FileWriter(file)) {
-                out = new BufferedWriter(fileWriter);
+            File temp = File.createTempFile("stacktrace", ".tmp");
+            try (BufferedWriter out = new BufferedWriter(new FileWriter(temp))) {
+                out.write(ExceptionUtils.getStackTrace(throwable));
             }
-            out.write(ExceptionUtils.getStackTrace(throwable));
-            message = saveFile(file, filePath);
+            message = saveFile(temp, filePath);
+            temp.delete();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,13 +75,21 @@ class FileUtils {
     }
 
     static void writeXml(Issues issues, String filePath) {
+        File configFile = new File("." + TARGET_DIR + filePath);
+        List<Issue> issuesList = issues.getIssues();
         try {
-            JAXBContext jaxbCtx = JAXBContext.newInstance(Issues.class);
-            Marshaller marshaller = jaxbCtx.createMarshaller();
-            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            marshaller.marshal(issues, new File("." + TARGET_DIR + filePath));
+            JAXBContext jaxbContext = JAXBContext.newInstance(Issues.class);
+            if (configFile.exists() && configFile.isFile()) {
+                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+                Issues issuesExisting = (Issues) unmarshaller.unmarshal(configFile);
+                issuesList = new ArrayList<>(issuesExisting.getIssues());
+                issuesExisting.setIssues(issuesList);
+            }
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(new Issues(issuesList), configFile);
         } catch (JAXBException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

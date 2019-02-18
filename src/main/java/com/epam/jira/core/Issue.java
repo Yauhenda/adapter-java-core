@@ -24,11 +24,11 @@ class Issue {
 
     @XmlElementWrapper(name = "attachments")
     @XmlElement(name = "attachment")
-    private List<String> attachments = new ArrayList<>();
+    private List<String> attachments;
 
     @XmlElementWrapper(name = "parameters")
     @XmlElement(name = "parameter")
-    private List<Parameter> parameters = new ArrayList<>();
+    private List<Parameter> parameters;
 
     void setIssueKey(String issueKey) {
         this.issueKey = StringEscapeUtils.escapeJson(issueKey);

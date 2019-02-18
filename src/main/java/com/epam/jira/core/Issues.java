@@ -11,10 +11,28 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 class Issues {
 
+    public Issues() {
+    }
+
+    Issues(List<Issue> issueList) {
+        this.issueList = issueList;
+    }
+
     @XmlElement(name = "test")
-    private List<Issue> issueList = new ArrayList<>();
+    private List<Issue> issueList;
 
     void addIssue(Issue issue) {
+        if (issueList == null) {
+            issueList = new ArrayList<>();
+        }
         this.issueList.add(issue);
+    }
+
+    List<Issue> getIssues() {
+        return issueList;
+    }
+
+    void setIssues(List<Issue> issueList) {
+        this.issueList = issueList;
     }
 }
