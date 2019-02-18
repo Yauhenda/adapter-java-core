@@ -1,6 +1,7 @@
 package com.epam.jira.core;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 public class TestResultProcessor {
 
@@ -28,8 +29,9 @@ public class TestResultProcessor {
             exceptionMessage = exceptionMessage.substring(0, exceptionMessage.indexOf('\n'));
         }
         String message = "Failed due to: " + throwable.getClass().getName() + ": " + exceptionMessage
-                + ".\nFull stack trace attached as " + filePath;
+                + ".\nFull stack trace attached as " + Paths.get(filePath).getFileName();
         issue.addAttachment(filePath);
+
         addToSummary(message);
     }
 
@@ -44,7 +46,7 @@ public class TestResultProcessor {
     public static void addAttachment(File attachment) {
         String savedFile = FileUtils.saveFile(attachment);
         issue.addAttachment(savedFile);
-        issue.addToSummary("Attachment added: " + savedFile);
+        issue.addToSummary("Attachment added: " + Paths.get(savedFile).getFileName());
     }
 
     public static void setTime(String time) {
