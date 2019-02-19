@@ -1,6 +1,7 @@
 package com.epam.jira.core;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -34,7 +35,7 @@ class FileUtils {
         try {
             File temp = File.createTempFile("stacktrace", ".tmp");
             try (BufferedWriter out = new BufferedWriter(new FileWriter(temp))) {
-                out.write(ExceptionUtils.getStackTrace(throwable));
+                out.write(StringEscapeUtils.escapeJson(ExceptionUtils.getStackTrace(throwable)));
             }
             message = saveFile(temp, filePath);
             temp.delete();
