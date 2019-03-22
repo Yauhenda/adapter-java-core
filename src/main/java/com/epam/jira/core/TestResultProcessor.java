@@ -2,8 +2,14 @@ package com.epam.jira.core;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestResultProcessor {
+
+    private static final Logger LOGGER = Logger.getLogger(FileUtils.class.getName());
+
+    private static final String XML_NAME = "jira-tm-report.xml";
 
     private static Issue issue;
     private static Issues issues = new Issues();
@@ -55,7 +61,8 @@ public class TestResultProcessor {
 
     public static void saveResults() {
         addIssue();
-        FileUtils.writeXml(issues, "jira-tm-report.xml");
+        LOGGER.log(Level.INFO, () -> "Save results of " + issues.getIssues().size() + " tests to " + XML_NAME + ".");
+        FileUtils.writeXml(issues, XML_NAME);
     }
 
     private static void addIssue() {
